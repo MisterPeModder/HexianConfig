@@ -1,0 +1,87 @@
+buildscript {
+	repositories {
+		mavenCentral();
+		jcenter();
+  }
+}
+
+apply plugin: 'java-library';
+apply plugin: 'maven-publish';
+
+apply from: 'project.gradle'
+
+group = ext.group;
+archivesBaseName = ext.projectName;
+version = ext.version + ((ext.snapshot) ? "-SNAPSHOT" : "")
+
+sourceCompatibility = 1.8;
+targetCompatibility = 1.8;
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+	classifier = "sources"
+	from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+	classifier = "javadoc"
+	from javadoc.destinationDir
+}
+
+if (file("auth.gradle").exists()) {
+	apply from: "auth.gradle";
+}
+
+publishing {
+	publications {
+		mavenPrimary(MavenPublication) {
+			from components.java;
+
+			groupId = project.ext.group;
+			artifactId = project.ext.projectName;
+			version = project.ext.version;
+
+			artifact sourcesJar;
+			artifact javadocJar;
+			
+			pom {
+				name = "Hexian Config";
+				description = "A simple configuration handler";
+				url = "https://github.com/MisterPeModder/HexianConfig";
+				
+				developers {
+					developer {
+						id = "misterpemodder"
+						name = "Yanis Guaye"
+						email = "yguaye44@gmail.com"
+					}
+				}
+				
+				licenses {
+					license {
+						name = "MIT License"
+						url = "https://opensource.org/licenses/MIT"
+						distribution = "repo"
+					}
+				}
+				
+				scm {
+					url = "https://github.com/MisterPeModder/HexianConfig"
+					connection = "scm:git:git@github.com:MisterPeModder/HexianConfig.git"
+					developerConnection = "scm:git:git@github.com:MisterPeModder/HexianConfig.git"
+				}
+			}
+		}
+	}
+	
+	repositories {
+		if (project.hasProperty("mavenUser") && project.hasProperty("mavenPass")) {
+			maven {
+				url = 'https://maven.misterpemodder.com/libs-release/';
+				credentials {
+					username = project.properties.mavenUser
+					password = project.properties.mavenPass
+				}
+			}
+		}
+	}
+}

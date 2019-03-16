@@ -1,0 +1,6 @@
+ext {
+	projectName = "hexian-config"
+	group = "com.misterpemodder"
+	version = "0.1.0"
+	snapshot = true
+}
