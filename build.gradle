@@ -8,7 +8,7 @@ buildscript {
 apply plugin: 'java-library';
 apply plugin: 'maven-publish';
 
-apply from: 'project.gradle'
+apply from: 'project.gradle';
 
 group = ext.group;
 archivesBaseName = ext.projectName;
@@ -16,6 +16,25 @@ version = ext.version + ((ext.snapshot) ? "-SNAPSHOT" : "")
 
 sourceCompatibility = 1.8;
 targetCompatibility = 1.8;
+
+repositories {
+  mavenCentral()
+  jcenter()
+}
+
+dependencies {
+	testImplementation "org.junit.jupiter:junit-jupiter-api:" + project.ext.junit_jupiter;
+  testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:" + project.ext.junit_jupiter;
+}
+
+test {
+  useJUnitPlatform()
+
+  testLogging {
+    outputs.upToDateWhen {false}
+    showStandardStreams = true
+  }
+}
 
 task sourcesJar(type: Jar, dependsOn: classes) {
 	classifier = "sources"

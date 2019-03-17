@@ -1,6 +1,7 @@
 ext {
-	projectName = "hexian-config"
-	group = "com.misterpemodder"
-	version = "0.1.0"
+	projectName = 'hexian-config'
+	group = 'com.misterpemodder'
+	version = '0.1.0'
 	snapshot = true
+	junit_jupiter = '5.3.2'
 }
