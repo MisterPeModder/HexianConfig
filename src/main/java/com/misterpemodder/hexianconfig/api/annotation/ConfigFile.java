@@ -19,29 +19,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.misterpemodder.hexianconfig;
+package com.misterpemodder.hexianconfig.api.annotation;
 
-public class ConfigEntry<T> {
-  public final Class<T> type;
-  public final String[] comments;
-  public T value;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-  public ConfigEntry(Class<T> type, T value, String[] comments) {
-    this.type = type;
-    this.value = value;
-    this.comments = comments;
-  }
+/**
+ * Marks a class as a config file.
+ * config file class MUST have a constructor with no parameters.
+ */
+@Documented
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface ConfigFile {
+  /**
+   * The name of this file (without the extension).
+   */
+  String value();
 
-  @SuppressWarnings({"unchecked", "rawtypes"})
-  public static ConfigEntry<?> create(Class<?> type, Object value, String[] comments) {
-    return new ConfigEntry(type, value, comments);
-  }
-
-  @Override
-  public String toString() {
-    StringBuilder builder = new StringBuilder();
-    for (String comment : comments)
-      builder.append("# ").append(comment).append('\n');
-    return builder.append(type.getName() + " '" + value.toString() + "'").toString();
-  }
+  String[] comments() default {};
 }

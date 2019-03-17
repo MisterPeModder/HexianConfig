@@ -19,17 +19,40 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.misterpemodder.hexianconfig;
+package com.misterpemodder.hexianconfig.api;
 
-public class ConfigException extends Exception {
-  private static final long serialVersionUID = 5805610507007836979L;
+import java.io.File;
+import java.util.Map;
+import com.misterpemodder.hexianconfig.impl.PropertiesConfigLoader;
 
-  public ConfigException(String message) {
-    super(message);
+/**
+ * Handles the serialization and deserialization of configuration values in a specific format.
+ */
+public interface ConfigLoader {
+  /**
+   * Stores the given entries.
+   * 
+   * @param entries The entries to store.
+   */
+  void store(Map<String, ConfigEntry<?>> entries, File file, String[] fileComments)
+      throws ConfigException;
+
+  /**
+   * Loads entries into the given map.
+   * 
+   * @param entries Where the parsed entries should be put.
+   */
+  void load(Map<String, ConfigEntry<?>> entries, File file) throws ConfigException;
+
+  /**
+   * @return The file extension used by this loader, dot '.' included.
+   */
+  String getFileExtension();
+
+  /**
+   * @return A {@link ConfigLoader} that can read/write java <code>.properties</code> files.
+   */
+  static ConfigLoader propertiesLoader() {
+    return PropertiesConfigLoader.INSTANCE;
   }
-
-  public ConfigException(String message, Throwable cause) {
-    super(message, cause);
-  }
-
 }

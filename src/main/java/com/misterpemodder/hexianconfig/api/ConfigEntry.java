@@ -19,19 +19,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.misterpemodder.hexianconfig;
+package com.misterpemodder.hexianconfig.api;
 
-import java.io.File;
-import com.misterpemodder.hexianconfig.api.ConfigHandler;
-import com.misterpemodder.hexianconfig.api.ConfigLoader;
-import org.junit.jupiter.api.Test;
+/**
+ * Contains a config value, its type and comments.
+ */
+public interface ConfigEntry<T> {
+  Class<T> getType();
 
-public class BasicTests {
-  @Test
-  public void defaultConfig() throws Exception {
-    File directory = new File(BasicTests.class.getResource("/").getPath());
-    ConfigHandler handler = ConfigHandler.create(directory, ConfigLoader.propertiesLoader());
-    DefaultConfig config = handler.load(DefaultConfig.class);
-    handler.store(config);
-  }
+  T getValue();
+
+  void setValue(T value);
+
+  String[] getComments();
 }

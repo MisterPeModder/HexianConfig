@@ -19,28 +19,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.misterpemodder.hexianconfig.loader;
+package com.misterpemodder.hexianconfig.api.annotation;
 
-import java.io.File;
-import java.util.Map;
-import com.misterpemodder.hexianconfig.ConfigException;
-import com.misterpemodder.hexianconfig.ConfigEntry;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-public interface ConfigLoader {
+/**
+ * Marks a field as a config value.
+ * The marked field must be non-static.
+ */
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.FIELD)
+public @interface ConfigValue {
   /**
-   * Stores the given entries.
-   * 
-   * @param entries The entries to store.
+   * The key associated with this value.
    */
-  void store(Map<String, ConfigEntry<?>> entries, File file, String[] fileComments)
-      throws ConfigException;
+  String key();
 
-  /**
-   * Loads entries into the given map.
-   * 
-   * @param entries Where the parsed entries should be put.
-   */
-  void load(Map<String, ConfigEntry<?>> entries, File file) throws ConfigException;
-
-  String getFileExtension();
+  String[] comments() default {};
 }

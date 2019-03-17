@@ -19,19 +19,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.misterpemodder.hexianconfig;
+package com.misterpemodder.hexianconfig.impl;
 
 import java.io.File;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
-import com.misterpemodder.hexianconfig.loader.ConfigLoader;
+import com.misterpemodder.hexianconfig.api.ConfigEntry;
+import com.misterpemodder.hexianconfig.api.ConfigException;
+import com.misterpemodder.hexianconfig.api.ConfigHandler;
+import com.misterpemodder.hexianconfig.api.ConfigLoader;
+import com.misterpemodder.hexianconfig.api.annotation.ConfigFile;
+import com.misterpemodder.hexianconfig.api.annotation.ConfigValue;
 
-public class ConfigHandler {
+public class ConfigHandlerImpl implements ConfigHandler {
   private final File configDirectory;
   private final ConfigLoader loader;
 
-  public ConfigHandler(File configDirectory, ConfigLoader loader) {
+  public ConfigHandlerImpl(File configDirectory, ConfigLoader loader) {
     this.configDirectory = configDirectory;
     this.loader = loader;
   }
@@ -74,7 +79,7 @@ public class ConfigHandler {
       if (value == null)
         continue;
       entries.put(value.key(),
-          ConfigEntry.create(field.getType(), field.get(config), value.comments()));
+          ConfigEntryImpl.create(field.getType(), field.get(config), value.comments()));
     }
     return entries;
   }

@@ -19,19 +19,43 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.misterpemodder.hexianconfig;
+package com.misterpemodder.hexianconfig.impl;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import com.misterpemodder.hexianconfig.api.ConfigEntry;
 
-@Documented
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
-public @interface ConfigValue {
-  String key();
+public class ConfigEntryImpl<T> implements ConfigEntry<T> {
+  private final Class<T> type;
+  private final String[] comments;
+  private T value;
 
-  String[] comments() default {};
+  protected ConfigEntryImpl(Class<T> type, T value, String[] comments) {
+    this.type = type;
+    this.value = value;
+    this.comments = comments;
+  }
+
+  @SuppressWarnings({"unchecked", "rawtypes"})
+  public static ConfigEntry<?> create(Class<?> type, Object value, String[] comments) {
+    return new ConfigEntryImpl(type, value, comments);
+  }
+
+  @Override
+  public String[] getComments() {
+    return this.comments;
+  }
+
+  @Override
+  public Class<T> getType() {
+    return this.type;
+  }
+
+  @Override
+  public T getValue() {
+    return this.value;
+  }
+
+  @Override
+  public void setValue(T value) {
+    this.value = value;
+  }
 }

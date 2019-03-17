@@ -21,6 +21,9 @@
 
 package com.misterpemodder.hexianconfig;
 
+import com.misterpemodder.hexianconfig.api.annotation.ConfigFile;
+import com.misterpemodder.hexianconfig.api.annotation.ConfigValue;
+
 @ConfigFile(value = "default-config",
     comments = {"A simple config file.", "Used for testing purposes."})
 public class DefaultConfig {
@@ -29,5 +32,11 @@ public class DefaultConfig {
 
   @ConfigValue(key = "test.value", comments = "yeet")
   public String testValue = "some value";
+
+  @ConfigValue(key = "test.empty", comments = "empty property")
+  public String testEmpty = "";
+
+  @ConfigValue(key = "test.null", comments = {"I am invisible...", "", "...or am I?"})
+  public String testNull = null;
 }
 

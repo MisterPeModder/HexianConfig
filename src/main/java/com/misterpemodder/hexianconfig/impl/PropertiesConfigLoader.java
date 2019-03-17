@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.misterpemodder.hexianconfig.loader;
+package com.misterpemodder.hexianconfig.impl;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -29,13 +29,16 @@ import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.util.Map;
 import java.util.Properties;
-import com.misterpemodder.hexianconfig.ConfigException;
-import com.misterpemodder.hexianconfig.ConfigEntry;
+import com.misterpemodder.hexianconfig.api.ConfigEntry;
+import com.misterpemodder.hexianconfig.api.ConfigException;
+import com.misterpemodder.hexianconfig.api.ConfigLoader;
 
 /**
  * Loads java .properties files as config
  */
 public class PropertiesConfigLoader implements ConfigLoader {
+  public static final PropertiesConfigLoader INSTANCE = new PropertiesConfigLoader();
+
   @Override
   public void load(Map<String, ConfigEntry<?>> entries, File file) throws ConfigException {
     if (!file.exists())
@@ -71,7 +74,7 @@ public class PropertiesConfigLoader implements ConfigLoader {
         if (entry != null)
           pw.println();
         entry = entries.get(key);
-        for (String comment : entry.comments)
+        for (String comment : entry.getComments())
           pw.println("# " + comment);
         pw.println(key + "=" + escapeString(stringifyValue(entry)));
       }
@@ -87,17 +90,18 @@ public class PropertiesConfigLoader implements ConfigLoader {
 
   @SuppressWarnings("unchecked")
   private <T> void parseValue(ConfigEntry<T> entry, String value) {
-    Class<T> type = entry.type;
+    Class<T> type = entry.getType();
     if (type == String.class)
-      entry.value = (T) value;
+      entry.setValue((T) value);
     else
       throw new RuntimeException("Cannot parse value of type " + type.getCanonicalName());
   }
 
   private <T> String stringifyValue(ConfigEntry<T> entry) {
-    Class<T> type = entry.type;
+    Class<T> type = entry.getType();
+    T value = entry.getValue();
     if (type == String.class)
-      return (String) entry.value;
+      return value == null ? "" : (String) entry.getValue();
     throw new RuntimeException("Cannot strigify value of type " + type.getCanonicalName());
   }
 

@@ -19,19 +19,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.misterpemodder.hexianconfig;
+package com.misterpemodder.hexianconfig.api;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+/**
+ * Exceptions that are thrown by {@link ConfigLoader}.
+ */
+public class ConfigException extends Exception {
+  private static final long serialVersionUID = 5805610507007836979L;
 
-@Documented
-@Target(ElementType.TYPE)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface ConfigFile {
-  String value();
+  public ConfigException(String message) {
+    super(message);
+  }
 
-  String[] comments() default {};
+  public ConfigException(String message, Throwable cause) {
+    super(message, cause);
+  }
 }
