@@ -54,7 +54,7 @@ public class BasicTests {
     DefaultConfig config = new DefaultConfig();
 
     final String value1 = "lorem ipsum";
-    final String value2 = "this is a test";
+    final Long value2 = -42L;
     final String value3 = "this is a test";
 
     ConfigHandler<DefaultConfig> handler =
@@ -75,7 +75,7 @@ public class BasicTests {
         new BufferedInputStream(Files.newInputStream(handler.getPath(), StandardOpenOption.READ)));
 
     assertEquals(config.testName, properties.getProperty("test.name"));
-    assertEquals(config.testValue, properties.getProperty("test.value"));
+    assertEquals(config.testValue, Long.valueOf(properties.getProperty("test.value")));
     assertEquals(config.testEmpty, properties.getProperty("test.empty"));
     assertEquals("", properties.getProperty("test.null"), "DefaultConfig.testNull");
   }
@@ -87,12 +87,27 @@ public class BasicTests {
     public String testName = "yeet";
 
     @ConfigValue(key = "test.value", comments = "yeet")
-    public String testValue = "some value";
+    public Long testValue = 567890789L;
 
     @ConfigValue(key = "test.empty", comments = "empty property")
     public String testEmpty = "";
 
     @ConfigValue(key = "test.null", comments = {"I am invisible...", "", "...or am I?"})
     public String testNull = null;
+
+    @ConfigValue(key = "primitive.int")
+    public int someInt = 42;
+
+    @ConfigValue(key = "primitive.float")
+    public float someFloat = 0.42F;
+
+    @ConfigValue(key = "primitive.long")
+    public long someLong = 4200000000L;
+
+    @ConfigValue(key = "primitive.double")
+    public double someDouble = 42.42;
+
+    @ConfigValue(key = "primitive.boolean")
+    public boolean someBoolean = true;
   }
 }
