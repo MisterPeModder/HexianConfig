@@ -5,7 +5,6 @@ HexianConfig
 A annotation-based configuration file handling library
 
 ## Compiling
----
 To use this library in your workspace, add the following to your `build.gradle`:
 ```gradle
 repositories {
@@ -20,7 +19,6 @@ dependencies {
 ```
 
 ## Using
----
 A config file is created by adding the `@ConfigFile` annotation to a class
 and marking public (non-static) fields with `@ConfigValue`.  
 
