@@ -21,7 +21,7 @@
 
 package com.misterpemodder.hexianconfig.api;
 
-import java.io.File;
+import java.nio.file.Path;
 import java.util.Map;
 import com.misterpemodder.hexianconfig.impl.PropertiesConfigLoader;
 
@@ -32,17 +32,20 @@ public interface ConfigLoader {
   /**
    * Stores the given entries.
    * 
-   * @param entries The entries to store.
+   * @param entries      The entries to store.
+   * @param path         The location of the config file.
+   * @param fileComments Some comments about this config file.
    */
-  void store(Map<String, ConfigEntry<?>> entries, File file, String[] fileComments)
+  void store(Map<String, ConfigEntry<?>> entries, Path path, String[] fileComments)
       throws ConfigException;
 
   /**
    * Loads entries into the given map.
    * 
    * @param entries Where the parsed entries should be put.
+   * @param path    The location of the config file.
    */
-  void load(Map<String, ConfigEntry<?>> entries, File file) throws ConfigException;
+  void load(Map<String, ConfigEntry<?>> entries, Path path) throws ConfigException;
 
   /**
    * @return The file extension used by this loader, dot '.' included.

@@ -21,12 +21,14 @@
 
 package com.misterpemodder.hexianconfig.impl;
 
+import static java.nio.file.StandardOpenOption.CREATE;
+import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
+import static java.nio.file.StandardOpenOption.WRITE;
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Map;
 import java.util.Properties;
 import com.misterpemodder.hexianconfig.api.ConfigEntry;
@@ -40,29 +42,30 @@ public class PropertiesConfigLoader implements ConfigLoader {
   public static final PropertiesConfigLoader INSTANCE = new PropertiesConfigLoader();
 
   @Override
-  public void load(Map<String, ConfigEntry<?>> entries, File file) throws ConfigException {
-    if (!file.exists())
+  public void load(Map<String, ConfigEntry<?>> entries, Path path) throws ConfigException {
+    if (!Files.exists(path))
       return;
     Properties properties = new Properties();
     try {
-      properties.load(new BufferedReader(Files.newBufferedReader(file.toPath())));
+      properties.load(new BufferedReader(Files.newBufferedReader(path)));
     } catch (IOException e) {
-      throw new ConfigException("Could not load config file " + file.toString(), e);
+      throw new ConfigException("Could not load config file " + path.toString(), e);
     }
     for (String key : entries.keySet()) {
       try {
         parseValue(entries.get(key), properties.getProperty(key));
       } catch (RuntimeException e) {
         throw new ConfigException(
-            "Could not load key " + key + " in config file " + file.toString(), e);
+            "Could not load key " + key + " in config file " + path.toString(), e);
       }
     }
   }
 
   @Override
-  public void store(Map<String, ConfigEntry<?>> entries, File file, String[] fileComments)
+  public void store(Map<String, ConfigEntry<?>> entries, Path path, String[] fileComments)
       throws ConfigException {
-    try (PrintWriter pw = new PrintWriter(new FileWriter(file))) {
+    try (PrintWriter pw =
+        new PrintWriter(Files.newBufferedWriter(path, WRITE, TRUNCATE_EXISTING, CREATE))) {
       if (fileComments.length > 0) {
         for (String fileComment : fileComments)
           pw.println("# " + fileComment);
@@ -79,7 +82,7 @@ public class PropertiesConfigLoader implements ConfigLoader {
         pw.println(key + "=" + escapeString(stringifyValue(entry)));
       }
     } catch (IOException e) {
-      throw new ConfigException("Could not save config file " + file.toString(), e);
+      throw new ConfigException("Could not save config file " + path.toString(), e);
     }
   }
 

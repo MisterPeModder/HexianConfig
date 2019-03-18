@@ -21,17 +21,22 @@
 
 package com.misterpemodder.hexianconfig.api;
 
-import java.io.File;
-import com.misterpemodder.hexianconfig.api.annotation.ConfigFile;
+import java.nio.file.Path;
 import com.misterpemodder.hexianconfig.impl.ConfigHandlerImpl;
 
 /**
  * Loads and saves config object using a {@link ConfigLoader}.
  */
 public interface ConfigHandler<C> {
+  /**
+   * @return The name of the config file.
+   */
   String getName();
 
-  File getFile();
+  /**
+   * @return The path of the config file.
+   */
+  Path getPath();
 
   /**
    * Loads a config file from disc.
@@ -46,14 +51,13 @@ public interface ConfigHandler<C> {
   /**
    * Creates a {@link ConfigHandler}.
    * 
-   * @param configFire      the class annotated with {@link ConfigFile}. Must have a contructor with
-   *                        no parameters.
-   * @param configDirectory The root directory for config files.
+   * @param configFire      the class annotated with {@code @ConfigFile}.
+   * @param configDirectory The directory of the config file.
    * @param loader          The loader that will be used to parse/store config files.
    * 
    * @return The config handler.
    */
-  public static <C> ConfigHandler<C> create(C configObject, File configDirectory,
+  public static <C> ConfigHandler<C> create(C configObject, Path configDirectory,
       ConfigLoader loader) throws ConfigException {
     return new ConfigHandlerImpl<>(configObject, configDirectory, loader);
   }

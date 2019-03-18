@@ -22,7 +22,7 @@
 package com.misterpemodder.hexianconfig.api;
 
 /**
- * Exceptions that are thrown by {@link ConfigLoader}.
+ * Exceptions that are thrown by {@link ConfigLoader} and {@link ConfigHandler}.
  */
 public class ConfigException extends Exception {
   private static final long serialVersionUID = 5805610507007836979L;

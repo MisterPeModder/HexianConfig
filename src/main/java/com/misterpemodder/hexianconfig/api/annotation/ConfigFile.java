@@ -29,7 +29,6 @@ import java.lang.annotation.Target;
 
 /**
  * Marks a class as a config file.
- * config file class MUST have a constructor with no parameters.
  */
 @Documented
 @Target(ElementType.TYPE)

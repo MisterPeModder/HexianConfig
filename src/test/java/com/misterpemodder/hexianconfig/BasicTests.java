@@ -26,6 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.Properties;
 import com.misterpemodder.hexianconfig.api.ConfigHandler;
@@ -37,18 +38,19 @@ import org.junit.jupiter.api.Test;
 public class BasicTests {
   @Test
   public void defaultConfigReadWrite() throws Exception {
-    File directory = new File(BasicTests.class.getResource("/").getPath());
+    Path directory = new File(BasicTests.class.getResource("/").getPath()).toPath();
     ConfigHandler<DefaultConfig> handler =
         ConfigHandler.create(new DefaultConfig(), directory, ConfigLoader.propertiesLoader());
+
     handler.load();
     handler.store();
 
-    assertTrue(handler.getFile().exists(), "saved in correct location check");
+    assertTrue(Files.exists(handler.getPath()), "saved in correct location check");
   }
 
   @Test
   public void defaultConfigModification() throws Exception {
-    File directory = new File(BasicTests.class.getResource("/").getPath());
+    Path directory = new File(BasicTests.class.getResource("/").getPath()).toPath();
     DefaultConfig config = new DefaultConfig();
 
     final String value1 = "lorem ipsum";
@@ -60,13 +62,17 @@ public class BasicTests {
     config.testName = value1;
     config.testValue = value2;
     config.testEmpty = value3;
+
+    if (Files.exists(handler.getPath()))
+      Files.delete(handler.getPath());
+
     handler.store();
 
-    assertTrue(handler.getFile().exists(), "saved in correct location check");
+    assertTrue(Files.exists(handler.getPath()), "saved in correct location check");
 
     Properties properties = new Properties();
-    properties.load(new BufferedInputStream(
-        Files.newInputStream(handler.getFile().toPath(), StandardOpenOption.READ)));
+    properties.load(
+        new BufferedInputStream(Files.newInputStream(handler.getPath(), StandardOpenOption.READ)));
 
     assertEquals(config.testName, properties.getProperty("test.name"));
     assertEquals(config.testValue, properties.getProperty("test.value"));

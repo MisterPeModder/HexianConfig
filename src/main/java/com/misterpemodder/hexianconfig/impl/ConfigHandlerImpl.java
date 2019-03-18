@@ -21,9 +21,9 @@
 
 package com.misterpemodder.hexianconfig.impl;
 
-import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import com.misterpemodder.hexianconfig.api.ConfigEntry;
@@ -34,21 +34,21 @@ import com.misterpemodder.hexianconfig.api.annotation.ConfigFile;
 import com.misterpemodder.hexianconfig.api.annotation.ConfigValue;
 
 public class ConfigHandlerImpl<C> implements ConfigHandler<C> {
-  private final File configDirectory;
+  private final Path configDirectory;
   private final ConfigLoader loader;
   private final C configObject;
   private String fileName;
-  private File file;
+  private Path path;
   private String[] comments;
   private Map<String, ConfigEntry<?>> entries;
 
-  public ConfigHandlerImpl(C configObject, File configDirectory, ConfigLoader loader)
+  public ConfigHandlerImpl(C configObject, Path configDirectory, ConfigLoader loader)
       throws ConfigException {
     this.configDirectory = configDirectory;
     this.loader = loader;
     this.configObject = configObject;
     getConfigData();
-    this.file = new File(this.configDirectory, this.fileName + this.loader.getFileExtension());
+    this.path = this.configDirectory.resolve(this.fileName + this.loader.getFileExtension());
   }
 
   @Override
@@ -57,18 +57,18 @@ public class ConfigHandlerImpl<C> implements ConfigHandler<C> {
   }
 
   @Override
-  public File getFile() {
-    return this.file;
+  public Path getPath() {
+    return this.path;
   }
 
   @Override
   public void load() throws ConfigException {
-    this.loader.load(this.entries, this.file);
+    this.loader.load(this.entries, this.path);
   }
 
   @Override
   public void store() throws ConfigException {
-    this.loader.store(this.entries, this.file, this.comments);
+    this.loader.store(this.entries, this.path, this.comments);
   }
 
   private void getConfigData() throws ConfigException {

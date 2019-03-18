@@ -29,7 +29,7 @@ import java.lang.annotation.Target;
 
 /**
  * Marks a field as a config value.
- * The marked field must be non-static.
+ * The marked field must be public and non-static.
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
