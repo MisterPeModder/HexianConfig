@@ -25,11 +25,13 @@ package com.misterpemodder.hexianconfig.api;
  * Contains a config value, its type and comments.
  */
 public interface ConfigEntry<T> {
+  String getKey();
+
   Class<T> getType();
+
+  String[] getComments();
 
   T getValue();
 
   void setValue(T value);
-
-  String[] getComments();
 }

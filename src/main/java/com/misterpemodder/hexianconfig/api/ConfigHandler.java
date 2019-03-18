@@ -22,36 +22,39 @@
 package com.misterpemodder.hexianconfig.api;
 
 import java.io.File;
+import com.misterpemodder.hexianconfig.api.annotation.ConfigFile;
 import com.misterpemodder.hexianconfig.impl.ConfigHandlerImpl;
 
 /**
  * Loads and saves config object using a {@link ConfigLoader}.
  */
-public interface ConfigHandler {
+public interface ConfigHandler<C> {
+  String getName();
+
+  File getFile();
+
   /**
    * Loads a config file from disc.
-   * 
-   * @param type A class annotated with {@link ConfigFile}. must have a constructor with no
-   *             parameters.
-   * 
-   * @return An instance of {@code type}.
    */
-  <T> T load(Class<T> type) throws ConfigException;
+  void load() throws ConfigException;
 
   /**
    * Stores a config file to disc.
-   * 
-   * @param config An instance of a class annotated with {@link ConfigFile}.
    */
-  void store(Object config) throws ConfigException;
+  void store() throws ConfigException;
 
   /**
    * Creates a {@link ConfigHandler}.
    * 
+   * @param configFire      the class annotated with {@link ConfigFile}. Must have a contructor with
+   *                        no parameters.
    * @param configDirectory The root directory for config files.
-   * @param loader The loader that will be used to parse/store config files.
+   * @param loader          The loader that will be used to parse/store config files.
+   * 
+   * @return The config handler.
    */
-  public static ConfigHandler create(File configDirectory, ConfigLoader loader) {
-    return new ConfigHandlerImpl(configDirectory, loader);
+  public static <C> ConfigHandler<C> create(C configObject, File configDirectory,
+      ConfigLoader loader) throws ConfigException {
+    return new ConfigHandlerImpl<>(configObject, configDirectory, loader);
   }
 }

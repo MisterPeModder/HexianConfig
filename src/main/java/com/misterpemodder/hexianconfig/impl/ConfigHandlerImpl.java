@@ -26,7 +26,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import com.misterpemodder.hexianconfig.api.ConfigEntry;
 import com.misterpemodder.hexianconfig.api.ConfigException;
 import com.misterpemodder.hexianconfig.api.ConfigHandler;
@@ -34,74 +33,74 @@ import com.misterpemodder.hexianconfig.api.ConfigLoader;
 import com.misterpemodder.hexianconfig.api.annotation.ConfigFile;
 import com.misterpemodder.hexianconfig.api.annotation.ConfigValue;
 
-public class ConfigHandlerImpl implements ConfigHandler {
+public class ConfigHandlerImpl<C> implements ConfigHandler<C> {
   private final File configDirectory;
   private final ConfigLoader loader;
+  private final C configObject;
+  private String fileName;
+  private File file;
+  private String[] comments;
+  private Map<String, ConfigEntry<?>> entries;
 
-  public ConfigHandlerImpl(File configDirectory, ConfigLoader loader) {
+  public ConfigHandlerImpl(C configObject, File configDirectory, ConfigLoader loader)
+      throws ConfigException {
     this.configDirectory = configDirectory;
     this.loader = loader;
+    this.configObject = configObject;
+    getConfigData();
+    this.file = new File(this.configDirectory, this.fileName + this.loader.getFileExtension());
   }
 
+  @Override
+  public String getName() {
+    return this.fileName;
+  }
 
-  public <T> T load(Class<T> type) throws ConfigException {
+  @Override
+  public File getFile() {
+    return this.file;
+  }
+
+  @Override
+  public void load() throws ConfigException {
+    this.loader.load(this.entries, this.file);
+  }
+
+  @Override
+  public void store() throws ConfigException {
+    this.loader.store(this.entries, this.file, this.comments);
+  }
+
+  private void getConfigData() throws ConfigException {
     try {
-      ConfigFile configFile = type.getAnnotation(ConfigFile.class);
-      if (configFile == null)
+      @SuppressWarnings("unchecked")
+      Class<C> configClass = (Class<C>) configObject.getClass();
+      ConfigFile configMetadata = configClass.getAnnotation(ConfigFile.class);
+
+      if (configMetadata == null)
         throw new RuntimeException(
-            "class " + type.getName() + "is lacking the @ConfigFile annotation");
-      T config = type.newInstance();
-      Map<Field, ConfigValue> annotatedFields = getAnnotatedFields(config);
-      Map<String, ConfigEntry<?>> entries = getEntries(config, annotatedFields);
-      this.loader.load(entries,
-          new File(this.configDirectory, configFile.value() + this.loader.getFileExtension()));
-      for (Entry<Field, ConfigValue> entry : annotatedFields.entrySet())
-        entry.getKey().set(config, entries.get(entry.getValue().key()).getValue());
-      return config;
-    } catch (IllegalAccessException | InstantiationException | RuntimeException e) {
+            "class " + configClass.getName() + "is lacking the @ConfigFile annotation");
+      this.entries = getEntries(configClass, this.configObject);
+      this.fileName = configMetadata.value();
+      this.comments = configMetadata.comments();
+    } catch (IllegalAccessException | RuntimeException e) {
       throw new ConfigException("Couldn't load config file", e);
     }
   }
 
-  public void store(Object config) throws ConfigException {
-    Class<?> type = config.getClass();
-    ConfigFile configFile = type.getAnnotation(ConfigFile.class);
-    if (configFile == null)
-      throw new ConfigException("Couldn't store config file, class " + type.getName()
-          + "is lacking the @ConfigFile annotation");
-    try {
-      this.loader.store(getEntries(config, getAnnotatedFields(config)),
-          new File(this.configDirectory, configFile.value() + this.loader.getFileExtension()),
-          configFile.comments());
-    } catch (IllegalAccessException e) {
-      throw new ConfigException("Couldn't store config file", e);
-    }
-  }
-
-  private Map<Field, ConfigValue> getAnnotatedFields(Object config) {
-    Map<Field, ConfigValue> annotatedFields = new HashMap<>();
-    for (Field field : config.getClass().getDeclaredFields()) {
+  private static <C> Map<String, ConfigEntry<?>> getEntries(Class<C> configClass, C config)
+      throws IllegalAccessException {
+    Map<String, ConfigEntry<?>> ret = new HashMap<>();
+    for (Field field : configClass.getDeclaredFields()) {
       ConfigValue value = field.getAnnotation(ConfigValue.class);
       if (value != null) {
         if ((field.getModifiers() & Modifier.STATIC) != 0)
           throw new RuntimeException("config value " + value.key() + " is static.");
         if ((field.getModifiers() & Modifier.PUBLIC) == 0)
           throw new RuntimeException("config value " + value.key() + " is not public.");
-        annotatedFields.put(field, value);
+        ret.put(value.key(), new ConfigEntryImpl<>(value, field, config));
       }
     }
-    return annotatedFields;
-  }
-
-  private Map<String, ConfigEntry<?>> getEntries(Object config,
-      Map<Field, ConfigValue> annotatedFields) throws IllegalAccessException {
-    Map<String, ConfigEntry<?>> entries = new HashMap<>();
-    for (Entry<Field, ConfigValue> entry : annotatedFields.entrySet()) {
-      Field field = entry.getKey();
-      ConfigValue value = entry.getValue();
-      entries.put(value.key(),
-          ConfigEntryImpl.create(field.getType(), field.get(config), value.comments()));
-    }
-    return entries;
+    return ret;
   }
 }

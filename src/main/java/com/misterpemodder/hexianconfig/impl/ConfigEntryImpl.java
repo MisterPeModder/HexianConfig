@@ -21,27 +21,31 @@
 
 package com.misterpemodder.hexianconfig.impl;
 
+import java.lang.reflect.Field;
 import com.misterpemodder.hexianconfig.api.ConfigEntry;
+import com.misterpemodder.hexianconfig.api.annotation.ConfigValue;
 
 public class ConfigEntryImpl<T> implements ConfigEntry<T> {
+  private final String key;
   private final Class<T> type;
   private final String[] comments;
-  private T value;
 
-  protected ConfigEntryImpl(Class<T> type, T value, String[] comments) {
-    this.type = type;
-    this.value = value;
-    this.comments = comments;
-  }
+  private final Field field;
+  private final Object owner;
 
-  @SuppressWarnings({"unchecked", "rawtypes"})
-  public static ConfigEntry<?> create(Class<?> type, Object value, String[] comments) {
-    return new ConfigEntryImpl(type, value, comments);
+  @SuppressWarnings("unchecked")
+  protected ConfigEntryImpl(ConfigValue annotation, Field field, Object owner) {
+    this.key = annotation.key();
+    this.type = (Class<T>) field.getType();
+    this.comments = annotation.comments();
+    this.field = field;
+    this.field.setAccessible(true);
+    this.owner = owner;
   }
 
   @Override
-  public String[] getComments() {
-    return this.comments;
+  public String getKey() {
+    return this.key;
   }
 
   @Override
@@ -50,12 +54,30 @@ public class ConfigEntryImpl<T> implements ConfigEntry<T> {
   }
 
   @Override
+  public String[] getComments() {
+    return this.comments;
+  }
+
+  @Override
+  @SuppressWarnings("unchecked")
   public T getValue() {
-    return this.value;
+    try {
+      return (T) this.field.get(this.owner);
+    } catch (IllegalAccessException | IllegalArgumentException e) {
+      return null;
+    }
   }
 
   @Override
   public void setValue(T value) {
-    this.value = value;
+    try {
+      this.field.set(this.owner, value);
+    } catch (IllegalAccessException e) {
+    }
   }
+  /*
+  @SuppressWarnings({"unchecked", "rawtypes"})
+  public static ConfigEntry<?> create(Class<?> type, Object value, String[] comments) {
+    return new ConfigEntryImpl(type, value, comments);
+  }*/
 }
