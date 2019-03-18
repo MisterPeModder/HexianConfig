@@ -21,13 +21,16 @@
 
 package com.misterpemodder.hexianconfig.api;
 
+import static org.apiguardian.api.API.Status.STABLE;
 import java.nio.file.Path;
 import java.util.Map;
 import com.misterpemodder.hexianconfig.impl.PropertiesConfigLoader;
+import org.apiguardian.api.API;
 
 /**
  * Handles the serialization and deserialization of configuration values in a specific format.
  */
+@API(status = STABLE, since = "0.1.0")
 public interface ConfigLoader {
   /**
    * Stores the given entries.

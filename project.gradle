@@ -4,4 +4,5 @@ ext {
 	version = '0.1.0'
 	snapshot = true
 	junit_jupiter = '5.3.2'
+	apiguardian = '1.0.0'
 }

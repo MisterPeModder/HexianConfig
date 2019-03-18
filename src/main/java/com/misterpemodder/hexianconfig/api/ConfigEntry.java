@@ -21,17 +21,39 @@
 
 package com.misterpemodder.hexianconfig.api;
 
+import static org.apiguardian.api.API.Status.MAINTAINED;
+import com.misterpemodder.hexianconfig.api.annotation.ConfigValue;
+import org.apiguardian.api.API;
+
 /**
- * Contains a config value, its type and comments.
+ * Represnents a config value.
  */
+@API(status = MAINTAINED, since = "0.1.0")
 public interface ConfigEntry<T> {
+  /**
+   * @return The value key set in {@link ConfigValue#key()}
+   */
   String getKey();
 
+  /**
+   * @return The value type.
+   */
   Class<T> getType();
 
+  /**
+  * @return The comments set in {@link ConfigValue#comments()}
+  */
   String[] getComments();
 
+  /**
+   * @return the current value.
+   */
   T getValue();
 
+  /**
+   * Sets the value. changes will affect the underlying field.
+   * 
+   * @param value The value.
+   */
   void setValue(T value);
 }

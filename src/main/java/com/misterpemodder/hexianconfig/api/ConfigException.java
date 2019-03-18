@@ -21,9 +21,13 @@
 
 package com.misterpemodder.hexianconfig.api;
 
+import org.apiguardian.api.API;
+import static org.apiguardian.api.API.Status.STABLE;
+
 /**
  * Exceptions that are thrown by {@link ConfigLoader} and {@link ConfigHandler}.
  */
+@API(status = STABLE, since = "0.1.0")
 public class ConfigException extends Exception {
   private static final long serialVersionUID = 5805610507007836979L;
 

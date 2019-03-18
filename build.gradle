@@ -23,6 +23,7 @@ repositories {
 }
 
 dependencies {
+	compile 'org.apiguardian:apiguardian-api:' + project.ext.apiguardian;
 	testImplementation "org.junit.jupiter:junit-jupiter-api:" + project.ext.junit_jupiter;
   testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:" + project.ext.junit_jupiter;
 }

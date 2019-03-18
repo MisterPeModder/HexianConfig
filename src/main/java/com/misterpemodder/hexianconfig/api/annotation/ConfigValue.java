@@ -21,11 +21,13 @@
 
 package com.misterpemodder.hexianconfig.api.annotation;
 
+import static org.apiguardian.api.API.Status.MAINTAINED;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import org.apiguardian.api.API;
 
 /**
  * Marks a field as a config value.
@@ -34,6 +36,7 @@ import java.lang.annotation.Target;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
+@API(status = MAINTAINED, since = "0.1.0")
 public @interface ConfigValue {
   /**
    * The key associated with this value.

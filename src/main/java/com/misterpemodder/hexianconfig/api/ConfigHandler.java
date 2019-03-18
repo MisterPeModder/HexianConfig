@@ -21,12 +21,15 @@
 
 package com.misterpemodder.hexianconfig.api;
 
+import static org.apiguardian.api.API.Status.MAINTAINED;
 import java.nio.file.Path;
 import com.misterpemodder.hexianconfig.impl.ConfigHandlerImpl;
+import org.apiguardian.api.API;
 
 /**
  * Loads and saves config object using a {@link ConfigLoader}.
  */
+@API(status = MAINTAINED, since = "0.1.0")
 public interface ConfigHandler<C> {
   /**
    * @return The name of the config file.

@@ -21,11 +21,13 @@
 
 package com.misterpemodder.hexianconfig.api.annotation;
 
+import static org.apiguardian.api.API.Status.MAINTAINED;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import org.apiguardian.api.API;
 
 /**
  * Marks a class as a config file.
@@ -33,6 +35,7 @@ import java.lang.annotation.Target;
 @Documented
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
+@API(status = MAINTAINED, since = "0.1.0")
 public @interface ConfigFile {
   /**
    * The name of this file (without the extension).
