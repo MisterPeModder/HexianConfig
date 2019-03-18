@@ -24,6 +24,7 @@ package com.misterpemodder.hexianconfig.impl;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.nio.file.Path;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import com.misterpemodder.hexianconfig.api.ConfigEntry;
@@ -59,6 +60,16 @@ public class ConfigHandlerImpl<C> implements ConfigHandler<C> {
   @Override
   public Path getPath() {
     return this.path;
+  }
+
+  @Override
+  public ConfigEntry<?> getEntry(String key) {
+    return this.entries.get(key);
+  }
+
+  @Override
+  public Collection<String> getKeys() {
+    return this.entries.keySet();
   }
 
   @Override

@@ -23,6 +23,8 @@ package com.misterpemodder.hexianconfig.api;
 
 import static org.apiguardian.api.API.Status.MAINTAINED;
 import java.nio.file.Path;
+import java.util.Collection;
+import javax.annotation.Nullable;
 import com.misterpemodder.hexianconfig.impl.ConfigHandlerImpl;
 import org.apiguardian.api.API;
 
@@ -40,6 +42,23 @@ public interface ConfigHandler<C> {
    * @return The path of the config file.
    */
   Path getPath();
+
+  /**
+   * Provides a way to get entries without using the configuration object.
+   * 
+   * @param key The entry key.
+   * 
+   * @return The entry at {@code key}, null if not found.
+   */
+  @Nullable
+  ConfigEntry<?> getEntry(String key);
+
+  /**
+  * Provides a way to get entries keys without using the configuration object.
+  * 
+  * @return The keys.
+  */
+  Collection<String> getKeys();
 
   /**
    * Loads a config file from disc.
