@@ -7,6 +7,7 @@ buildscript {
 
 apply plugin: 'java-library';
 apply plugin: 'maven-publish';
+apply plugin: "signing";
 
 apply from: 'project.gradle';
 
@@ -50,8 +51,8 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 	from javadoc.destinationDir
 }
 
-if (file("auth.gradle").exists()) {
-	apply from: "auth.gradle";
+if (file("private.gradle").exists()) {
+	apply from: "private.gradle";
 }
 
 publishing {
@@ -106,5 +107,17 @@ publishing {
 				}
 			}
 		}
+	}
+}
+
+defaultTasks "clean", "build";
+
+signing {
+	if (project.hasProperty("signing.keyId")) {
+		println("Key credentials found. Enabling jar signing.");
+		sign configurations.archives;
+		sign publishing.publications.mavenPrimary
+	} else {
+		println("Skipping jar signing");
 	}
 }

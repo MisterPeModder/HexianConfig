@@ -62,22 +62,30 @@ public interface ConfigHandler<C> {
 
   /**
    * Loads a config file from disc.
+   * 
+   * @throws ConfigException On failure.
    */
   void load() throws ConfigException;
 
   /**
    * Stores a config file to disc.
+   * 
+   * @throws ConfigException On failure.
    */
   void store() throws ConfigException;
 
   /**
    * Creates a {@link ConfigHandler}.
    * 
-   * @param configFire      the class annotated with {@code @ConfigFile}.
+   * @param configObject    The class annotated with {@code @ConfigFile}.
    * @param configDirectory The directory of the config file.
    * @param loader          The loader that will be used to parse/store config files.
    * 
+   * @param <C>             The config object type.
+   * 
    * @return The config handler.
+   * 
+   * @throws ConfigException On failure.
    */
   public static <C> ConfigHandler<C> create(C configObject, Path configDirectory,
       ConfigLoader loader) throws ConfigException {

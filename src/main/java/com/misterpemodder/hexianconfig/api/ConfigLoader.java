@@ -38,6 +38,8 @@ public interface ConfigLoader {
    * @param entries      The entries to store.
    * @param path         The location of the config file.
    * @param fileComments Some comments about this config file.
+   * 
+   * @throws ConfigException On failure.
    */
   void store(Map<String, ConfigEntry<?>> entries, Path path, String[] fileComments)
       throws ConfigException;
@@ -47,6 +49,8 @@ public interface ConfigLoader {
    * 
    * @param entries Where the parsed entries should be put.
    * @param path    The location of the config file.
+   * 
+   * @throws ConfigException On failure.
    */
   void load(Map<String, ConfigEntry<?>> entries, Path path) throws ConfigException;
 

@@ -38,7 +38,7 @@ import org.apiguardian.api.API;
 @API(status = MAINTAINED, since = "0.1.0")
 public @interface ConfigFile {
   /**
-   * The name of this file (without the extension).
+   * @return The name of this file (without the extension).
    */
   String value();
 
