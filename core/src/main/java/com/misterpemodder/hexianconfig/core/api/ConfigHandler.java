@@ -19,13 +19,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.misterpemodder.hexianconfig.api;
+package com.misterpemodder.hexianconfig.core.api;
 
 import static org.apiguardian.api.API.Status.MAINTAINED;
 import java.nio.file.Path;
 import java.util.Collection;
 import javax.annotation.Nullable;
-import com.misterpemodder.hexianconfig.impl.ConfigHandlerImpl;
+import com.misterpemodder.hexianconfig.core.impl.ConfigHandlerImpl;
 import org.apiguardian.api.API;
 
 /**

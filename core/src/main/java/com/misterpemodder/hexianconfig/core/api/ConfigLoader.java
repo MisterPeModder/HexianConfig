@@ -19,28 +19,42 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.misterpemodder.hexianconfig.api.annotation;
+package com.misterpemodder.hexianconfig.core.api;
 
-import static org.apiguardian.api.API.Status.MAINTAINED;
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import static org.apiguardian.api.API.Status.STABLE;
+import java.nio.file.Path;
+import java.util.Map;
 import org.apiguardian.api.API;
 
 /**
- * Marks a class as a config file.
+ * Handles the serialization and deserialization of configuration values in a specific format.
  */
-@Documented
-@Target(ElementType.TYPE)
-@Retention(RetentionPolicy.RUNTIME)
-@API(status = MAINTAINED, since = "0.1.0")
-public @interface ConfigFile {
+@API(status = STABLE, since = "0.1.0")
+public interface ConfigLoader {
   /**
-   * @return The name of this file (without the extension).
+   * Stores the given entries.
+   * 
+   * @param entries      The entries to store.
+   * @param path         The location of the config file.
+   * @param fileComments Some comments about this config file.
+   * 
+   * @throws ConfigException On failure.
    */
-  String value();
+  void store(Map<String, ConfigEntry<?>> entries, Path path, String[] fileComments)
+      throws ConfigException;
 
-  String[] comments() default {};
+  /**
+   * Loads entries into the given map.
+   * 
+   * @param entries Where the parsed entries should be put.
+   * @param path    The location of the config file.
+   * 
+   * @throws ConfigException On failure.
+   */
+  void load(Map<String, ConfigEntry<?>> entries, Path path) throws ConfigException;
+
+  /**
+   * @return The file extension used by this loader, dot '.' included.
+   */
+  String getFileExtension();
 }

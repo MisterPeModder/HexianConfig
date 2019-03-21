@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.misterpemodder.hexianconfig.api;
+package com.misterpemodder.hexianconfig.core.api;
 
 import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.STABLE;

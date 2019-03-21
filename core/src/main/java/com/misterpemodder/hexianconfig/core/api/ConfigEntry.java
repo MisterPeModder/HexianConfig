@@ -19,29 +19,41 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.misterpemodder.hexianconfig.api.annotation;
+package com.misterpemodder.hexianconfig.core.api;
 
 import static org.apiguardian.api.API.Status.MAINTAINED;
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import com.misterpemodder.hexianconfig.core.api.annotation.ConfigValue;
 import org.apiguardian.api.API;
 
 /**
- * Marks a field as a config value.
- * The marked field must be public and non-static.
+ * Represnents a config value.
  */
-@Documented
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
 @API(status = MAINTAINED, since = "0.1.0")
-public @interface ConfigValue {
+public interface ConfigEntry<T> {
   /**
-   * @return The key associated with this value.
+   * @return The value key set in {@link ConfigValue#key()}
    */
-  String key();
+  String getKey();
 
-  String[] comments() default {};
+  /**
+   * @return The value type.
+   */
+  Class<T> getType();
+
+  /**
+  * @return The comments set in {@link ConfigValue#comments()}
+  */
+  String[] getComments();
+
+  /**
+   * @return the current value.
+   */
+  T getValue();
+
+  /**
+   * Sets the value. changes will affect the underlying field.
+   * 
+   * @param value The value.
+   */
+  void setValue(T value);
 }

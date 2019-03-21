@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.misterpemodder.hexianconfig.impl;
+package com.misterpemodder.hexianconfig.properties;
 
 import static java.nio.file.StandardOpenOption.CREATE;
 import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
@@ -33,9 +33,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.function.Function;
-import com.misterpemodder.hexianconfig.api.ConfigEntry;
-import com.misterpemodder.hexianconfig.api.ConfigException;
-import com.misterpemodder.hexianconfig.api.ConfigLoader;
+import com.misterpemodder.hexianconfig.core.api.ConfigEntry;
+import com.misterpemodder.hexianconfig.core.api.ConfigException;
+import com.misterpemodder.hexianconfig.core.api.ConfigLoader;
 
 /**
  * Loads java .properties files as config
@@ -43,6 +43,9 @@ import com.misterpemodder.hexianconfig.api.ConfigLoader;
 public class PropertiesConfigLoader implements ConfigLoader {
   private static final Map<Class<?>, Function<String, ?>> STRING_TO_VALUE_MAP;
   public static final PropertiesConfigLoader INSTANCE = new PropertiesConfigLoader();
+
+  public PropertiesConfigLoader() {
+  }
 
   @Override
   public void load(Map<String, ConfigEntry<?>> entries, Path path) throws ConfigException {

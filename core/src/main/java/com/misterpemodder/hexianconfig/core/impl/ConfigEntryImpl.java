@@ -19,11 +19,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.misterpemodder.hexianconfig.impl;
+package com.misterpemodder.hexianconfig.core.impl;
 
 import java.lang.reflect.Field;
-import com.misterpemodder.hexianconfig.api.ConfigEntry;
-import com.misterpemodder.hexianconfig.api.annotation.ConfigValue;
+import com.misterpemodder.hexianconfig.core.api.ConfigEntry;
+import com.misterpemodder.hexianconfig.core.api.annotation.ConfigValue;
 
 public class ConfigEntryImpl<T> implements ConfigEntry<T> {
   private final String key;

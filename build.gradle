@@ -1,123 +1,135 @@
-buildscript {
-	repositories {
-		mavenCentral();
-		jcenter();
-  }
-}
-
-apply plugin: 'java-library';
-apply plugin: 'maven-publish';
-apply plugin: "signing";
-
 apply from: 'project.gradle';
 
-group = ext.group;
-archivesBaseName = ext.projectName;
-version = ext.version + ((ext.snapshot) ? "-SNAPSHOT" : "")
-
-sourceCompatibility = 1.8;
-targetCompatibility = 1.8;
-
-repositories {
-  mavenCentral()
-  jcenter()
-}
-
-dependencies {
-	compile 'org.apiguardian:apiguardian-api:' + project.ext.apiguardian;
-	testImplementation "org.junit.jupiter:junit-jupiter-api:" + project.ext.junit_jupiter;
-  testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:" + project.ext.junit_jupiter;
-	
-	// Nullable annotations.
-	compile "com.google.code.findbugs:jsr305:3.0.0"
-}
-
-test {
-  useJUnitPlatform()
-
-  testLogging {
-    outputs.upToDateWhen {false}
-    showStandardStreams = true
-  }
-}
-
-task sourcesJar(type: Jar, dependsOn: classes) {
-	classifier = "sources"
-	from sourceSets.main.allSource
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-	classifier = "javadoc"
-	from javadoc.destinationDir
-}
-
-if (file("private.gradle").exists()) {
-	apply from: "private.gradle";
-}
-
-publishing {
-	publications {
-		mavenPrimary(MavenPublication) {
-			from components.java;
-
-			groupId = project.ext.group;
-			artifactId = project.ext.projectName;
-			version = project.ext.version;
-
-			artifact sourcesJar;
-			artifact javadocJar;
-			
-			pom {
-				name = "Hexian Config";
-				description = "A simple configuration handler";
-				url = "https://github.com/MisterPeModder/HexianConfig";
-				
-				developers {
-					developer {
-						id = "misterpemodder"
-						name = "Yanis Guaye"
-						email = "yguaye44@gmail.com"
-					}
-				}
-				
-				licenses {
-					license {
-						name = "MIT License"
-						url = "https://opensource.org/licenses/MIT"
-						distribution = "repo"
-					}
-				}
-				
-				scm {
-					url = "https://github.com/MisterPeModder/HexianConfig"
-					connection = "scm:git:git@github.com:MisterPeModder/HexianConfig.git"
-					developerConnection = "scm:git:git@github.com:MisterPeModder/HexianConfig.git"
-				}
-			}
-		}
+configure(subprojects.findAll()) {
+	buildscript {
+		repositories {
+			mavenCentral();
+			jcenter();
+	  }
 	}
-	
+
+	apply plugin: 'java-library';
+	apply plugin: 'maven-publish';
+	apply plugin: "signing";
+
+	group = projectGroup;
+	archivesBaseName = "hexian-config-$name";
+	description "$projectDescription, $name module";
+	version = projectVersion + (isSnapshot ? "-SNAPSHOT" : "");
+
+	sourceCompatibility = 1.8;
+	targetCompatibility = 1.8;
+
 	repositories {
-		if (project.hasProperty("mavenUser") && project.hasProperty("mavenPass")) {
-			maven {
-				url = 'https://maven.misterpemodder.com/libs-release/';
-				credentials {
-					username = project.properties.mavenUser
-					password = project.properties.mavenPass
+	  mavenCentral();
+	  jcenter();
+	}
+
+	dependencies {
+		// API Guardian
+		compile "org.apiguardian:apiguardian-api:$apiguardianVersion";
+
+		// JUnit
+		testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion";
+	  testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitVersion";
+
+		// Nullable annotations.
+		compile "com.google.code.findbugs:jsr305:$jsr305Version";
+	}
+
+	test {
+	  useJUnitPlatform();
+
+	  testLogging {
+	    outputs.upToDateWhen {false};
+	    showStandardStreams = true;
+	  }
+	}
+
+	task sourcesJar(type: Jar, dependsOn: classes) {
+		classifier = "sources"
+		from sourceSets.main.allSource
+	}
+
+	task javadocJar(type: Jar, dependsOn: javadoc) {
+		classifier = "javadoc"
+		from javadoc.destinationDir
+	}
+
+	if (file("private.gradle").exists()) {
+		apply from: "private.gradle";
+	}
+
+	publishing {
+		publications {
+			mavenPrimary(MavenPublication) {
+				from components.java;
+
+				groupId = project.group;
+				artifactId = project.name;
+				version = project.version;
+
+				artifact sourcesJar;
+				artifact javadocJar;
+
+				pom {
+					name = "Hexian Config ${project.name}".toString();
+					description = project.description;
+					url = "https://github.com/MisterPeModder/HexianConfig";
+
+					developers {
+						developer {
+							id = "misterpemodder"
+							name = "Yanis Guaye"
+							email = "yguaye44@gmail.com"
+						}
+					}
+
+					licenses {
+						license {
+							name = "MIT License"
+							url = "https://opensource.org/licenses/MIT"
+							distribution = "repo"
+						}
+					}
+
+					scm {
+						url = "https://github.com/MisterPeModder/HexianConfig"
+						connection = "scm:git:git@github.com:MisterPeModder/HexianConfig.git"
+						developerConnection = "scm:git:git@github.com:MisterPeModder/HexianConfig.git"
+					}
+				}
+			}
+		}
+
+		repositories {
+			if (project.hasProperty("mavenUser") && project.hasProperty("mavenPass")) {
+				maven {
+					url isSnapshot ? ext.mavenReleaseRepo : ext.mavenSnapshotRepo;
+					credentials {
+						username = project.properties.mavenUser
+						password = project.properties.mavenPass
+					}
 				}
 			}
 		}
 	}
+
+	signing {
+		if (project.hasProperty("signing.keyId")) {
+			sign configurations.archives;
+			sign publishing.publications.mavenPrimary
+		} else {
+			println("$name: skipping jar signing");
+		}
+	}
+
 }
 
-defaultTasks "clean", "build";
-
-signing {
-	if (project.hasProperty("signing.keyId")) {
-		println("Key credentials found. Enabling jar signing.");
-		sign configurations.archives;
-		sign publishing.publications.mavenPrimary
-	} else {
-		println("Skipping jar signing");
+// Make all modules depend on core
+configure(subprojects.findAll {!it.name.contains("core")}) {
+	dependencies {
+		compile project(':core')
+		testCompile project(':core')
 	}
 }

@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.misterpemodder.hexianconfig;
+package com.misterpemodder.hexianconfig.properties;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -29,10 +29,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.Properties;
-import com.misterpemodder.hexianconfig.api.ConfigHandler;
-import com.misterpemodder.hexianconfig.api.ConfigLoader;
-import com.misterpemodder.hexianconfig.api.annotation.ConfigFile;
-import com.misterpemodder.hexianconfig.api.annotation.ConfigValue;
+import com.misterpemodder.hexianconfig.core.api.ConfigHandler;
+import com.misterpemodder.hexianconfig.core.api.annotation.ConfigFile;
+import com.misterpemodder.hexianconfig.core.api.annotation.ConfigValue;
+import com.misterpemodder.hexianconfig.properties.PropertiesConfigLoader;
 import org.junit.jupiter.api.Test;
 
 public class BasicTests {
@@ -40,7 +40,7 @@ public class BasicTests {
   public void defaultConfigReadWrite() throws Exception {
     Path directory = new File(BasicTests.class.getResource("/").getPath()).toPath();
     ConfigHandler<DefaultConfig> handler =
-        ConfigHandler.create(new DefaultConfig(), directory, ConfigLoader.propertiesLoader());
+        ConfigHandler.create(new DefaultConfig(), directory, new PropertiesConfigLoader());
 
     handler.load();
     handler.store();
@@ -58,7 +58,7 @@ public class BasicTests {
     final String value3 = "this is a test";
 
     ConfigHandler<DefaultConfig> handler =
-        ConfigHandler.create(config, directory, ConfigLoader.propertiesLoader());
+        ConfigHandler.create(config, directory, new PropertiesConfigLoader());
     config.testName = value1;
     config.testValue = value2;
     config.testEmpty = value3;

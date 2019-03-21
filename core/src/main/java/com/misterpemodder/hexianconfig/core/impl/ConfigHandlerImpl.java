@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.misterpemodder.hexianconfig.impl;
+package com.misterpemodder.hexianconfig.core.impl;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -27,12 +27,12 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import com.misterpemodder.hexianconfig.api.ConfigEntry;
-import com.misterpemodder.hexianconfig.api.ConfigException;
-import com.misterpemodder.hexianconfig.api.ConfigHandler;
-import com.misterpemodder.hexianconfig.api.ConfigLoader;
-import com.misterpemodder.hexianconfig.api.annotation.ConfigFile;
-import com.misterpemodder.hexianconfig.api.annotation.ConfigValue;
+import com.misterpemodder.hexianconfig.core.api.ConfigEntry;
+import com.misterpemodder.hexianconfig.core.api.ConfigException;
+import com.misterpemodder.hexianconfig.core.api.ConfigHandler;
+import com.misterpemodder.hexianconfig.core.api.ConfigLoader;
+import com.misterpemodder.hexianconfig.core.api.annotation.ConfigFile;
+import com.misterpemodder.hexianconfig.core.api.annotation.ConfigValue;
 
 public class ConfigHandlerImpl<C> implements ConfigHandler<C> {
   private final Path configDirectory;
