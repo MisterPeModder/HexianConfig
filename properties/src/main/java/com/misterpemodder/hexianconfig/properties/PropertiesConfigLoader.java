@@ -79,7 +79,7 @@ public class PropertiesConfigLoader implements ConfigLoader {
         entry = entries.get(key);
         for (String comment : entry.getComments())
           pw.println("# " + comment);
-        pw.println(key + "=" + escapeString(stringifyValue(entry)));
+        pw.println(escapeString(key, true) + "=" + escapeString(stringifyValue(entry), false));
       }
     } catch (IOException e) {
       throw new ConfigException("Could not save config file " + path.toString(), e);
@@ -115,8 +115,34 @@ public class PropertiesConfigLoader implements ConfigLoader {
     return value == null ? "" : value.toString();
   }
 
-  private String escapeString(String str) {
-    return str.replace("\\", "\\\\").replace("\n", "\\n").replace("\r", "\\r").replace("\t", "\\t");
+  private String escapeString(String str, boolean isKey) {
+    StringBuilder builder = new StringBuilder();
+    for (int i = 0, s = str.length(); i < s; ++i) {
+      char c = str.charAt(i);
+      switch (c) {
+        case '\\':
+          builder.append("\\\\");
+          break;
+        case '=':
+          builder.append(isKey ? "\\=" : "=");
+          break;
+        case ':':
+          builder.append(isKey ? "\\:" : ":");
+          break;
+        case '\n':
+          builder.append("\\n");
+          break;
+        case '\r':
+          builder.append("\\r");
+          break;
+        case '\t':
+          builder.append("\\t");
+          break;
+        default:
+          builder.append(c);
+      }
+    }
+    return builder.toString();
   }
 
   private static boolean parseBooleanStrict(String value) {
@@ -132,12 +158,16 @@ public class PropertiesConfigLoader implements ConfigLoader {
     STRING_TO_VALUE_MAP.put(String.class, Function.identity());
 
     STRING_TO_VALUE_MAP.put(Boolean.class, PropertiesConfigLoader::parseBooleanStrict);
+    STRING_TO_VALUE_MAP.put(Byte.class, Byte::valueOf);
+    STRING_TO_VALUE_MAP.put(Short.class, Short::valueOf);
     STRING_TO_VALUE_MAP.put(Integer.class, Integer::valueOf);
     STRING_TO_VALUE_MAP.put(Long.class, Long::valueOf);
     STRING_TO_VALUE_MAP.put(Float.class, Float::valueOf);
     STRING_TO_VALUE_MAP.put(Double.class, Double::valueOf);
 
     STRING_TO_VALUE_MAP.put(boolean.class, PropertiesConfigLoader::parseBooleanStrict);
+    STRING_TO_VALUE_MAP.put(byte.class, Byte::parseByte);
+    STRING_TO_VALUE_MAP.put(short.class, Short::parseShort);
     STRING_TO_VALUE_MAP.put(int.class, Integer::parseInt);
     STRING_TO_VALUE_MAP.put(long.class, Long::parseLong);
     STRING_TO_VALUE_MAP.put(float.class, Float::parseFloat);
