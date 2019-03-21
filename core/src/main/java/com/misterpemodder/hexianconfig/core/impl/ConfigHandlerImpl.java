@@ -49,7 +49,7 @@ public class ConfigHandlerImpl<C> implements ConfigHandler<C> {
     this.loader = loader;
     this.configObject = configObject;
     getConfigData();
-    this.path = this.configDirectory.resolve(this.fileName + this.loader.getFileExtension());
+    this.path = this.configDirectory.resolve(this.fileName);
   }
 
   @Override
@@ -93,6 +93,8 @@ public class ConfigHandlerImpl<C> implements ConfigHandler<C> {
             "class " + configClass.getName() + "is lacking the @ConfigFile annotation");
       this.entries = getEntries(configClass, this.configObject);
       this.fileName = configMetadata.value();
+      if (!this.fileName.matches("\\..*$"))
+        this.fileName += this.loader.getFileExtension();
       this.comments = configMetadata.comments();
     } catch (IllegalAccessException | RuntimeException e) {
       throw new ConfigException("Couldn't load config file", e);

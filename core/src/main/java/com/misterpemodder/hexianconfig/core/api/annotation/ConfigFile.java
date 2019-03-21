@@ -38,7 +38,8 @@ import org.apiguardian.api.API;
 @API(status = MAINTAINED, since = "0.1.0")
 public @interface ConfigFile {
   /**
-   * @return The name of this file (without the extension).
+   * @return The name of this file, if the extension is omitted,
+   * the default extension of the loader is used.
    */
   String value();
 

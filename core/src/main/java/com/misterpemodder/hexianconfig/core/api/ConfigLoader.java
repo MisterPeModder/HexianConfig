@@ -54,7 +54,7 @@ public interface ConfigLoader {
   void load(Map<String, ConfigEntry<?>> entries, Path path) throws ConfigException;
 
   /**
-   * @return The file extension used by this loader, dot '.' included.
+   * @return The default file extension used by this loader, dot '.' included.
    */
   String getFileExtension();
 }

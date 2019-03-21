@@ -39,9 +39,9 @@ import org.apiguardian.api.API;
 @API(status = MAINTAINED, since = "0.1.0")
 public @interface ConfigValue {
   /**
-   * @return The key associated with this value.
+   * @return The key associated with this value, if empty, it is set to the field name.
    */
-  String key();
+  String key() default "";
 
   String[] comments() default {};
 }
