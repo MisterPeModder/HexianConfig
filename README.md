@@ -1,5 +1,5 @@
 HexianConfig
-[![Maven Repository](https://img.shields.io/maven-metadata/v/https/maven.misterpemodder.com/list/libs-snapshot/com/misterpemodder/hexian-config/maven-metadata.xml.svg)](https://maven.misterpemodder.com/libs-snapshot/com/misterpemodder/hexian-config)
+[![Maven Repository](https://img.shields.io/maven-metadata/v/https/maven.misterpemodder.com/list/libs-snapshot/com/misterpemodder/hexian-config/core/maven-metadata.xml.svg)](https://maven.misterpemodder.com/libs-snapshot/com/misterpemodder/hexian-config/)
 ========
 
 A annotation-based configuration file handling library
