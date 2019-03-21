@@ -1,4 +1,6 @@
-apply from: 'project.gradle';
+if (file("private.gradle").exists()) {
+		apply from: "private.gradle";
+}
 
 configure(subprojects.findAll()) {
 	buildscript {
@@ -56,10 +58,6 @@ configure(subprojects.findAll()) {
 		from javadoc.destinationDir
 	}
 
-	if (file("private.gradle").exists()) {
-		apply from: "private.gradle";
-	}
-
 	publishing {
 		publications {
 			mavenPrimary(MavenPublication) {
@@ -105,12 +103,14 @@ configure(subprojects.findAll()) {
 		repositories {
 			if (project.hasProperty("mavenUser") && project.hasProperty("mavenPass")) {
 				maven {
-					url isSnapshot ? ext.mavenReleaseRepo : ext.mavenSnapshotRepo;
+					url isSnapshot == 'true' ? mavenSnapshotRepo : mavenReleaseRepo;
 					credentials {
-						username = project.properties.mavenUser
-						password = project.properties.mavenPass
+						username = project.properties.mavenUser;
+						password = project.properties.mavenPass;
 					}
 				}
+			} else {
+				println("properties mavenUser and/or mavenPass are not defined!");
 			}
 		}
 	}

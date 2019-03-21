@@ -1,24 +1,52 @@
 HexianConfig
-[![Maven Repository](https://img.shields.io/maven-metadata/v/https/maven.misterpemodder.com/list/libs-release/com/misterpemodder/hexian-config/maven-metadata.xml.svg)](https://maven.misterpemodder.com/libs-release/com/misterpemodder/hexian-config)
+[![Maven Repository](https://img.shields.io/maven-metadata/v/https/maven.misterpemodder.com/list/libs-snapshot/com/misterpemodder/hexian-config/maven-metadata.xml.svg)](https://maven.misterpemodder.com/libs-snapshot/com/misterpemodder/hexian-config)
 ========
 
 A annotation-based configuration file handling library
 
 ## Compiling
-To use this library in your workspace, add the following to your `build.gradle`:
+
+Gradle:
 ```gradle
 repositories {
   maven {
-    url "https://maven.misterpemodder.com/libs-release/"
+    url "https://maven.misterpemodder.com/libs-snapshot/"
   }
 }
 
 dependencies {
-  compile "com.misterpemodder.customgamerules:hexian-config:[VERSION]"
+  compile "com.misterpemodder.hexian-config:core:[VERSION]"
+
+  // replace by the loader you want to use
+  compile "com.misterpemodder.hexian-config:properties:[VERSION]"
 }
 ```
 
-## Using
+Maven:
+```xml
+<repositories>
+    <repository>
+        <id>sponge</id>
+        <url>https://maven.misterpemodder.com/libs-snapshot/</url>
+    </repository>
+</repositories>
+
+<dependencies>
+  <dependency>
+      <groupId>com.misterpemodder.hexian-config</groupId>
+      <artifactId>core</artifactId>
+      <version>[VERSION]</version>
+  </dependency>
+  <dependency>
+      <groupId>com.misterpemodder.hexian-config</groupId>
+      <!-- replace by the loader you want -->
+      <artifactId>properties</artifactId>
+      <version>[VERSION]</version>
+  </dependency>
+</dependencies>
+```
+
+## Using HexianConfig
 A config file is created by adding the `@ConfigFile` annotation to a class
 and marking public (non-static) fields with `@ConfigValue`.  
 
@@ -39,8 +67,8 @@ using it:
 // Config object
 MyConfigFile cfg = new MyConfigFile();
 
-// Creating a handler
-ConfigHandler<MyConfigFile> handler = ConfigHandler.create(cfg, Paths.get("."), ConfigLoader.propertiesLoader());
+// Creating a handler, using the properties loader.
+ConfigHandler<MyConfigFile> handler = ConfigHandler.create(cfg, Paths.get("."), new PropertiesConfigLoader());
 
 // Loading the file, if not present default values are kept
 handler.load();
